@@ -11,4 +11,5 @@
 .local/
 .ssh/
 .venv/
+nltk_data/
 .viminfo
