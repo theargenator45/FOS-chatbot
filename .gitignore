@@ -15,5 +15,4 @@ nltk_data/
 .viminfo
 .idea/
 data/
-!src/chroma_db/
-!src/chroma_db/53cfcf81-d086-46da-873c-1d0c4336fc6d/index_metadata.pickle
+!src/chroma_db/*

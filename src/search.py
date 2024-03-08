@@ -1,5 +1,4 @@
 from langchain_google_vertexai import VertexAI
-from langchain import LLMChain
 from langchain_community.document_loaders import GCSDirectoryLoader
 from langchain_google_vertexai import VertexAIEmbeddings
 from langchain_community.vectorstores import Chroma
