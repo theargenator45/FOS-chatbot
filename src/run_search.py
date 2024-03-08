@@ -16,7 +16,8 @@ def run_semantic_search():
 
 
 
-if __name__=='main': 
+if __name__=="__main__": 
     
-    chain = run_semantic_chain()
-    print(type(chain))
+    chain = run_semantic_search()
+    result = chain({"query": "what is the context of the first page"})
+    print(result)
