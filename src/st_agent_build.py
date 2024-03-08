@@ -71,12 +71,12 @@ class SemanticSearch(BaseTool):
     name = "semantic_search"
     description = "this tool will run semantic search over a vector database containing documents and retrieve the top 5 most relevant documents"
     args_schema: Type[BaseModel] = MyToolInput
-    retriever = get_retriever()
 
     def _run(
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         # for the query return the most relevant documents
+        retriever = get_retriever()
         chain = get_semantic_chain(self.retriever)
         q_dict = {'query': query}
         answer = chain(q_dict)
