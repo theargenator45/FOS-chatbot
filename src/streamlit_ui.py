@@ -1,11 +1,11 @@
 import streamlit as st
 from langchain_community.callbacks import StreamlitCallbackHandler
+from agent_build import create_agent
 
 
 @st.cache_resource
 def load_chain():
-    # chain goes here
-    return None
+    return create_agent()
 
 def generate_response(chain):
     return chain.invoke({"input": st.session_state.messages[-1], "chat_history": st.session_state.messages}, {"callbacks": [StreamlitCallbackHandler(st.container())]})

@@ -12,10 +12,16 @@ from langchain.callbacks.manager import (
 )
 from typing import Optional, Type
 import pandas as pd
-from .run_search import run_semantic_search
+from run_search import run_semantic_search
+import vertexai
+
+PROJECT_ID = "lloyds-genai24lon-2701"
+LOCATION = "us-central1"
+
 
 class MyToolInput(BaseModel):
     inputs: str = Field(description="some inputs")
+
 
 class DocumentLookup(BaseTool):
     name = "document_lookup"
@@ -76,6 +82,7 @@ class SemanticSearch(BaseTool):
         raise NotImplementedError("my_tool does not support async")
     
 def create_agent():
+    vertexai.init(project=PROJECT_ID, location=LOCATION)
     llm = VertexAI(model_name="gemini-pro")
     tools = [DocumentLookup(), SemanticSearch()]
     prompt_str = f"""
