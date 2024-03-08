@@ -31,21 +31,30 @@ class DocumentLookup(BaseTool):
     def _run(
         self, vrn: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
-        data = pd.read_csv("summaries_fos_summary_1.csv")
+        data = pd.read_csv("fos_50_summary_records.csv")
         doc = data[data["id"] == vrn]
         print(doc)
         if len(doc) > 0:
             date = doc["date"].tolist()[0]
             summary = doc["text_summary"].tolist()[0]
-
+            url = f"https://www.financial-ombudsman.org.uk/decision/{vrn}.pdf"
+            company = doc["company"].tolist()[0]
+            decision = doc["decision"].tolist()[0]
+            area = doc["area"].tolist()[0]
             context = f"""
             Below is the date and summary of the document with the VRN {vrn} 
 
-            Date: {date}
+            Date: {date}\n
+
+            Company: {company}
 
             Summary: {summary}
-            
-            <iframe src="https://www.financial-ombudsman.org.uk/decision/{vrn}.pdf" width="700" height="1000" type="application/pdf"></iframe>
+
+            URL: {url}
+
+            Area: {area}
+
+            Decision: {decision}
             """
             return context
         
@@ -85,7 +94,7 @@ def create_agent():
     llm = VertexAI(model_name="gemini-pro")
     tools = [DocumentLookup(), SemanticSearch()]
     prompt_str = f"""
-    You are an AI chatbot which can help with FOS complaints.
+    You are an AI chatbot which can help with FOS (Financial Ombudsman Service)
 
     In all of your responses, you should include the key information (e.g. amounts paid) in a concise manner.
     {REACT}
