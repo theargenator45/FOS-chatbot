@@ -3,7 +3,7 @@ from langchain import PromptTemplate
 from langchain.agents import create_react_agent
 from langchain.agents import AgentExecutor
 import re
-from langchain_google_vertexai import VertexAI
+from langchain_google_vertexai import VertexAI, VertexAIEmbeddings
 from langchain.pydantic_v1 import BaseModel, Field
 from langchain.tools import BaseTool
 from langchain.callbacks.manager import (
@@ -12,8 +12,9 @@ from langchain.callbacks.manager import (
 )
 from typing import Optional, Type
 import pandas as pd
-from run_search import get_retriever, get_semantic_chain
+# from run_search import get_retriever, get_semantic_chain
 import vertexai
+from langchain_community.vectorstores import Chroma
 
 PROJECT_ID = "lloyds-genai24lon-2701"
 LOCATION = "us-central1"
@@ -71,17 +72,18 @@ class SemanticSearch(BaseTool):
     name = "semantic_search"
     description = "this tool will run semantic search over a vector database containing documents and retrieve the top 5 most relevant documents"
     args_schema: Type[BaseModel] = MyToolInput
-    retriever = get_retriever()
 
     def _run(
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
-        # for the query return the most relevant documents
-        chain = get_semantic_chain(self.retriever)
-        q_dict = {'query': query}
-        answer = chain(q_dict)
-        return answer
-
+        # # for the query return the most relevant documents
+        # chain = get_semantic_chain(self.retriever)
+        # q_dict = {'query': query}
+        # answer = chain(q_dict)
+        # return answer
+        client = Chroma(persist_directory="./chroma_db", embedding_function=VertexAIEmbeddings())
+        return [x.__dict__ for x in client.similarity_search(query)]
+    
     async def _arun(
         self, tool_input: str, run_manager: Optional[AsyncCallbackManagerForToolRun] = None
     ) -> str:
