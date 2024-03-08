@@ -48,14 +48,14 @@ def display_results_source(result):
 
 
 
-if __name__=='__main__':
-    retriever = get_retriever()
+# if __name__=='__main__':
+#     retriever = get_retriever()
     
-    chain = get_semantic_chain(retriever)
+#     chain = get_semantic_chain(retriever)
     
-    result = chain({"query": "what is the context of the first page"})
+#     result = chain({"query": "what is the context of the first page"})
     
-    info, source_url, file = display_results_source(result)
+#     info, source_url, file = display_results_source(result)
     
-    print(info, source_url, file)
+#     print(info, source_url, file)
 
