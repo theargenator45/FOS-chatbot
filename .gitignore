@@ -10,4 +10,5 @@
 .jupyter/
 .local/
 .ssh/
+.venv/
 .viminfo
