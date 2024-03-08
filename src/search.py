@@ -22,12 +22,13 @@ class SemanticSearch():
         self.prefix = prefix 
         self.model_name = model_name
         
-        
     def initialize_llm(self): 
         return VertexAI(model_name = self.model_name, 
                         max_output_tokens = 256, 
                         temperature = 0.1, top_p = 0.8, 
                            top_k = 40, verbose = True)
+
+        
     
     def load_documents_from_storage(self): 
         loader = GCSDirectoryLoader(project_name= self.project_id, 
@@ -48,13 +49,7 @@ class SemanticSearch():
         documents_vector_db = Chroma.from_documents(docs, embeddings)
         return documents_vector_db.as_retriever(search_type = 'mmr', search_kwargs = {"k":3})
     
-    def return_chain(self,llm, retriever): 
-        return RetrievalQA.from_chain_type(llm = llm, 
-                                           chain_type = "stuff", 
-                                           retriever=retriever, return_source_documents=True)
-    
-    def get_semantic_chain(self):
-        llm = self.initialize_llm()
+    def embeddings_to_vector_db(self):
         
         documents = self.load_documents_from_storage()
         
@@ -68,7 +63,21 @@ class SemanticSearch():
         
         retriever = self.get_retriever(docs, embeddings)
         
+        return retriever
+  
+
+    def return_chain(self,llm, retriever): 
+        return RetrievalQA.from_chain_type(llm = llm, 
+                                           chain_type = "stuff", 
+                                           retriever=retriever,
+                                           return_source_documents=True)
+    
+    def retrieve_semantic_chain(self, retriever):
+        
+        
         # return _chain 
+        
+        llm = self.initialize_llm()
         
         semantic_chain = self.return_chain(llm, retriever)
         

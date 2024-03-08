@@ -5,19 +5,23 @@ MODEL_NAME = 'text-bison-32k'
 
 from search import SemanticSearch 
 
-def run_semantic_search(): 
+def get_retriever(): 
+    
+    retriever = SemanticSearch(project_id=PROJECT_ID, 
+                           bucket_name = BUCKET_NAME,
+                           prefix = PREFIX,
+                           model_name = MODEL_NAME).embeddings_to_vector_db()
+    
+    return retriever
+
+def get_semantic_chain(retriever): 
     
     chain = SemanticSearch(project_id=PROJECT_ID, 
                            bucket_name = BUCKET_NAME,
                            prefix = PREFIX,
-                           model_name = MODEL_NAME).get_semantic_chain()
+                           model_name = MODEL_NAME).retrieve_semantic_chain(retriever)
     
-    return chain 
+    return chain
 
 
 
-if __name__=="__main__": 
-    
-    chain = run_semantic_search()
-    result = chain({"query": "what is the context of the first page"})
-    print(result)
