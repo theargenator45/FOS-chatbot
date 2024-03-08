@@ -12,7 +12,7 @@ from langchain.callbacks.manager import (
 )
 from typing import Optional, Type
 import pandas as pd
-from run_search import run_semantic_search
+from run_search import get_retriever, get_semantic_chain
 import vertexai
 
 PROJECT_ID = "lloyds-genai24lon-2701"
@@ -57,30 +57,29 @@ class DocumentLookup(BaseTool):
         """Use the tool asynchronously."""
         raise NotImplementedError("my_tool does not support async")
 
+
 class SemanticSearch(BaseTool):
     name = "semantic_search"
     description = "this tool will run semantic search over a vector database containing documents and retrieve the top 5 most relevant documents"
     args_schema: Type[BaseModel] = MyToolInput
-
+    retriever = get_retriever()
 
     def _run(
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         # for the query return the most relevant documents
-        chain = run_semantic_search()
+        chain = get_semantic_chain(self.retriever)
         q_dict = {'query': query}
         answer = chain(q_dict)
         return answer
-
-
-
 
     async def _arun(
         self, tool_input: str, run_manager: Optional[AsyncCallbackManagerForToolRun] = None
     ) -> str:
         """Use the tool asynchronously."""
         raise NotImplementedError("my_tool does not support async")
-    
+
+
 def create_agent():
     vertexai.init(project=PROJECT_ID, location=LOCATION)
     llm = VertexAI(model_name="gemini-pro")
