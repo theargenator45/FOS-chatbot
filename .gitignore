@@ -9,4 +9,5 @@
 .ipython/
 .jupyter/
 .local/
+.ssh/
 .viminfo
