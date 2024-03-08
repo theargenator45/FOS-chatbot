@@ -1,0 +1,12 @@
+*.pickle
+.bash_history
+.bashrc
+.cache/
+.config/
+.docker/
+.gsutil/
+.ipynb_checkpoints/
+.ipython/
+.jupyter/
+.local/
+.viminfo
