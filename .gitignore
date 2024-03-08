@@ -13,3 +13,5 @@
 .venv/
 nltk_data/
 .viminfo
+.idea/
+data/

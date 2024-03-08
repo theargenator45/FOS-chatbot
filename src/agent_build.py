@@ -12,7 +12,7 @@ from langchain.callbacks.manager import (
 )
 from typing import Optional, Type
 import pandas as pd
-
+from .run_search import run_semantic_search
 
 class MyToolInput(BaseModel):
     inputs: str = Field(description="some inputs")
@@ -56,11 +56,18 @@ class SemanticSearch(BaseTool):
     description = "this tool will run semantic search over a vector database containing documents and retrieve the top 5 most relevant documents"
     args_schema: Type[BaseModel] = MyToolInput
 
+
     def _run(
         self, query: str, run_manager: Optional[CallbackManagerForToolRun] = None
     ) -> str:
         # for the query return the most relevant documents
-        return "No documents were found."
+        chain = run_semantic_search()
+        q_dict = {'query': query}
+        answer = chain(q_dict)
+        return answer
+
+
+
 
     async def _arun(
         self, tool_input: str, run_manager: Optional[AsyncCallbackManagerForToolRun] = None
